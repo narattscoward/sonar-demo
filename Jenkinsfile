@@ -6,12 +6,15 @@ pipeline {
         stage('SonarQube Scan') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh '''
-                        ${tool "SonarScanner"}/bin/sonar-scanner \
-                        -Dsonar.projectKey=sonar-demo \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://sonarqube:9000
-                    '''
+                    script {
+                        def scannerHome = tool 'SonarScanner'
+                        sh """
+                            ${scannerHome}/bin/sonar-scanner \
+                              -Dsonar.projectKey=sonar-demo \
+                              -Dsonar.sources=. \
+                              -Dsonar.host.url=http://sonarqube:9000
+                        """
+                    }
                 }
             }
         }
