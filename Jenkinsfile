@@ -1,20 +1,16 @@
 pipeline {
     agent any
 
-    tools {
-        hudson.plugins.sonar.SonarRunnerInstallation 'SonarScanner'
-    }
-
     stages {
 
         stage('SonarQube Scan') {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     sh '''
-                    sonar-scanner \
-                      -Dsonar.projectKey=sonar-demo \
-                      -Dsonar.sources=. \
-                      -Dsonar.host.url=http://sonarqube:9000
+                        ${tool "SonarScanner"}/bin/sonar-scanner \
+                        -Dsonar.projectKey=sonar-demo \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://sonarqube:9000
                     '''
                 }
             }
