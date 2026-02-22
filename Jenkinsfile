@@ -6,23 +6,26 @@ pipeline {
     }
 
     stages {
-        stage('SonarQube Analysis') {
+
+        stage('SonarQube Scan') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh '''
+                    sh """
                     sonar-scanner \
                       -Dsonar.projectKey=sonar-demo \
                       -Dsonar.sources=. \
-                      -Dsonar.host.url=http://host.docker.internal:9000 \
+                      -Dsonar.host.url=http://sonarqube:9000 \
                       -Dsonar.login=$SONAR_TOKEN
-                    '''
+                    """
                 }
             }
         }
 
         stage('Quality Gate') {
             steps {
-                waitForQualityGate abortPipeline: true
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
     }
