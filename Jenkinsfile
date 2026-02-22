@@ -5,7 +5,12 @@ pipeline {
         }
     }
 
+    environment {
+        SONAR_SCANNER_HOME = tool 'SonarScanner'
+    }
+
     stages {
+
         stage('Install Dependencies') {
             steps {
                 sh 'python --version'
@@ -22,13 +27,17 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh '''
-                    apt-get update
-                    apt-get install -y wget unzip
-                    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-                    unzip sonar-scanner-cli-5.0.1.3006-linux.zip
-                    ./sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner
-                    '''
+                    sh """
+                    ${SONAR_SCANNER_HOME}/bin/sonar-scanner
+                    """
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
