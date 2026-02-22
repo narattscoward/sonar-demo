@@ -1,8 +1,8 @@
 pipeline {
     agent any
 
-    environment {
-        SONAR_TOKEN = credentials('sonarqube-token')
+    tools {
+        sonarRunner 'SonarScanner'
     }
 
     stages {
@@ -14,8 +14,7 @@ pipeline {
                     sonar-scanner \
                       -Dsonar.projectKey=sonar-demo \
                       -Dsonar.sources=. \
-                      -Dsonar.host.url=http://sonarqube:9000 \
-                      -Dsonar.login=$SONAR_TOKEN
+                      -Dsonar.host.url=http://sonarqube:9000
                     """
                 }
             }
