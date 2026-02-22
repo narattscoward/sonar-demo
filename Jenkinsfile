@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.11'
-        }
-    }
+    agent any
 
     environment {
         SONAR_SCANNER_HOME = tool 'SonarScanner'
@@ -13,14 +9,14 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'python --version'
-                sh 'pip install -r requirements.txt'
+                sh 'python3 --version'
+                sh 'pip3 install -r requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'python -m unittest discover'
+                sh 'python3 -m unittest discover'
             }
         }
 
