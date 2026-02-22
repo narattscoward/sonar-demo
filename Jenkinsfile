@@ -12,7 +12,8 @@ pipeline {
                             ${scannerHome}/bin/sonar-scanner \
                               -Dsonar.projectKey=sonar-demo \
                               -Dsonar.sources=. \
-                              -Dsonar.host.url=http://sonarqube:9000
+                              -Dsonar.host.url=http://sonarqube:9000 \
+                              -Dsonar.token=$SONAR_AUTH_TOKEN
                         """
                     }
                 }
