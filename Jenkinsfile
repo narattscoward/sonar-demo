@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        sonarRunner 'SonarScanner'
-    }
-
     environment {
         SONAR_TOKEN = credentials('sonar-token')
     }
@@ -37,7 +33,7 @@ pipeline {
                 withSonarQubeEnv('SonarQube') {
                     sh '''
                         . venv/bin/activate
-                        sonar-scanner \
+                        /opt/sonar-scanner/bin/sonar-scanner \
                         -Dsonar.projectKey=sonar-demo \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=http://sonarqube:9000 \
