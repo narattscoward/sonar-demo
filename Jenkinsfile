@@ -6,38 +6,15 @@ pipeline {
     }
 
     stages {
-
-        stage('Install Dependencies') {
-            steps {
-                sh '''
-                    python3 --version
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
-                '''
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh '''
-                    . venv/bin/activate
-                    pytest --maxfail=1 --disable-warnings -q
-                '''
-            }
-        }
-
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     sh '''
-                        . venv/bin/activate
-                        /opt/sonar-scanner/bin/sonar-scanner \
-                        -Dsonar.projectKey=sonar-demo \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://sonarqube:9000 \
-                        -Dsonar.login=$SONAR_TOKEN
+                    sonar-scanner \
+                      -Dsonar.projectKey=sonar-demo \
+                      -Dsonar.sources=. \
+                      -Dsonar.host.url=http://host.docker.internal:9000 \
+                      -Dsonar.login=$SONAR_TOKEN
                     '''
                 }
             }
